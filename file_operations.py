@@ -1,5 +1,5 @@
 """File operations."""
-
+import csv
 
 def read_file_contents(filename: str) -> str:
     """
@@ -26,7 +26,7 @@ def read_file_contents_to_list(filename: str) -> list:
     :param filename: File to read.
     :return: List of lines.
     """
-    pass
+    return list(open(filename, "r").read())
 
 
 def read_csv_file(filename: str) -> list:
@@ -52,7 +52,9 @@ def read_csv_file(filename: str) -> list:
     :param filename: File to read.
     :return: List of lists.
     """
-    pass
+    file = open(filename, "r")
+    newlist = list(csv.reader(file, delimiter=","))
+    return newlist
 
 
 def write_contents_to_file(filename: str, contents: str) -> None:
@@ -65,7 +67,9 @@ def write_contents_to_file(filename: str, contents: str) -> None:
     :param contents: Content to write to.
     :return: None
     """
-    pass
+    file = open(filename, "w")
+    file.write(contents)
+    return None
 
 
 def write_lines_to_file(filename: str, lines: list) -> None:
@@ -81,7 +85,9 @@ def write_lines_to_file(filename: str, lines: list) -> None:
     :param lines: List of string to write to the file.
     :return: None
     """
-    pass
+    file = open(filename, "w")
+    file.writelines(lines)
+    return None
 
 
 def write_csv_file(filename: str, data: list) -> None:
@@ -105,7 +111,10 @@ def write_csv_file(filename: str, data: list) -> None:
     :param data: List of lists to write to the file.
     :return: None
     """
-    pass
+    file = open(filename, "w")
+    writer = csv.writer(file)
+    writer.writerows(data)
+    return None
 
 
 def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv_output_filename: str) -> None:
@@ -153,4 +162,21 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
     :param csv_output_filename: Output CSV-file with names, towns and dates.
     :return: None
     """
-    pass
+    datesfile = open(dates_filename, "r")
+    dates = list(csv.reader(datesfile, delimiter=":"))
+    
+    townsfile = open(towns_filename, "r")
+    towns = list(csv.reader(townsfile, delimiter=":"))
+    newlines = [["name", "town", "date"]]
+    for i in dates:
+        name = i[0]
+        date = i[1]
+        for v in towns:
+            if name in v:
+                town = v[1]
+                newlines.append([name, town, date])
+        
+    file = open(csv_output_filename, "w")
+    writer = csv.writer(file)
+    writer.writerows(newlines)
+    return None
