@@ -26,7 +26,7 @@ def read_file_contents_to_list(filename: str) -> list:
     :param filename: File to read.
     :return: List of lines.
     """
-    return list(open(filename, "r").read())
+    return list(open(filename, "r").readlines())
 
 
 def read_csv_file(filename: str) -> list:
@@ -170,11 +170,14 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
     newlines = [["name", "town", "date"]]
     for i in dates:
         name = i[0]
-        date = i[1]
+        date = "-"
+        town = "-"
+        if i[1]:
+            date = i[1]
         for v in towns:
             if name in v:
                 town = v[1]
-                newlines.append([name, town, date])
+    newlines.append([name, town, date])
         
     file = open(csv_output_filename, "w")
     writer = csv.writer(file)
