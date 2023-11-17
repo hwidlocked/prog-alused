@@ -103,6 +103,5 @@ def insert_tuple_inside_tuple(outer_tuple: tuple, position: int, inner_tuple: tu
     insert_tuple_inside_tuple((1, 2), 2, (3, 4)) => (1, 2, 3, 4)
     insert_tuple_inside_tuple((1, 2, 3), 1, (1, )) => (1, 1, 2, 3)
     """
-    newtuple = ()
     newtuple = outer_tuple[0:position] + inner_tuple + outer_tuple[position:len(outer_tuple)]
     return newtuple

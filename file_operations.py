@@ -26,7 +26,7 @@ def read_file_contents_to_list(filename: str) -> list:
     :param filename: File to read.
     :return: List of lines.
     """
-    return list(open(filename, "r").splitlines())
+    return list(open(filename, "r").read().splitlines())
 
 
 def read_csv_file(filename: str) -> list:
@@ -86,7 +86,7 @@ def write_lines_to_file(filename: str, lines: list) -> None:
     :return: None
     """
     file = open(filename, "w")
-    file.writelines(lines)
+    file.write("\n".join(lines))
     return None
 
 
@@ -168,24 +168,26 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
     townsfile = open(towns_filename, "r")
     towns = list(csv.reader(townsfile, delimiter=":"))
     newlines = [["name", "town", "date"]]
+    ignore = []
+    def getTown(name):
+        for i in towns:
+            if i[0] == name:
+                return i[1]
+        return "-"
+    def getDate(name):
+        for i in dates:
+            if i[0] == name:
+                return i[1]
+        return "-"
     
-    exclude = []
     for i in dates:
-        name = "-"
-        date = "-"
-        town = "-"
-        if len(i) > 0:
-            name = i[0]
-        if len(i) > 1:
-            date = i[1]
-        for v in towns:
-            if name == "-" and not v[0] in exclude:
-                name = v[0]
-            if name in v:
-                town = v[1]
-        newlines.append([name, town, date])
-        exclude.append(name)
+        newlines.append([i[0],getTown(i[0]),getDate(i[0])])
+        ignore.append(i[0])
         
+    for i in towns:
+        if not i[0] in ignore:
+            newlines.append([i[0],getTown(i[0]),getDate(i[0])])
+    
     file = open(csv_output_filename, "w")
     writer = csv.writer(file)
     writer.writerows(newlines)
