@@ -164,7 +164,7 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
     """
     datesfile = open(dates_filename, "r")
     dates = list(csv.reader(datesfile, delimiter=":"))
-    
+
     townsfile = open(towns_filename, "r")
     towns = list(csv.reader(townsfile, delimiter=":"))
     newlines = [["name", "town", "date"]]
@@ -174,6 +174,7 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
             if i[0] == name:
                 return i[1]
         return "-"
+    
     def getDate(name):
         for i in dates:
             if i[0] == name:
