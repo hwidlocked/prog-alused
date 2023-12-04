@@ -1,4 +1,4 @@
-"""Does testing, very cool."""
+"""Doing tests, very cool."""
 from solution import students_study, lottery, fruit_order
 
 
@@ -184,12 +184,16 @@ def test__fruit_order__all_positive_exact_match():
 
 def test__fruit_order__use_all_smalls_some_bigs():
     """Does test, very cool."""
-    assert fruit_order(10, 10, 10) == 0
-
+    assert fruit_order(1, 1, 1) == 1
 
 def test__fruit_order__use_all_bigs_some_smalls():
     """Does test, very cool."""
-    assert fruit_order(1, 19, 100) == -1
+    assert fruit_order(5, 20, 100) == 0
+
+
+def test__fruit_order__use_some_smalls_some_bigs():
+    """Does test, very cool."""
+    assert fruit_order(120, 120, 124) == 4
 
 
 def test__fruit_order__not_enough():
@@ -199,12 +203,12 @@ def test__fruit_order__not_enough():
 
 def test__fruit_order__enough_bigs_not_enough_smalls():
     """Does test, very cool."""
-    assert fruit_order(4, 1, 10) == -1
+    assert fruit_order(4, 11, 55) == 0
 
 
 def test__fruit_order__enough_smalls_not_enough_bigs():
     """Does test, very cool."""
-    assert fruit_order(9, 1, 15) == -1
+    assert fruit_order(11, 1, 15) == 10
 
 
 def test__fruit_order__not_enough_with_more_than_5_smalls():
@@ -214,9 +218,9 @@ def test__fruit_order__not_enough_with_more_than_5_smalls():
 
 def test__fruit_order__enough_bigs_not_enough_smalls_large_numbers():
     """Does test, very cool."""
-    assert fruit_order(0, 24911, 124555) == 0
+    assert fruit_order(2, 600, 1158) == -1
 
 
 def test__fruit_order__match_large_numbers():
     """Does test, very cool."""
-    assert fruit_order(121515, 24911, 124559) == 4
+    assert fruit_order(200, 200, 1200) == 200
