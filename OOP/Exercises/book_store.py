@@ -43,9 +43,14 @@ class Store:
         2. book's own rating is >= than store's rating
         :return: bool
         """
-        if (not book in self.books) and book.rating >= self.rating:
+        for i in self.books:
+            if i.title == book.title:
+                return False
+                
+        if book not in self.books and book.rating >= self.rating:
             return True
-        return False
+        else:
+            return False
             
 
     def add_book(self, book: Book):
@@ -109,10 +114,14 @@ class Store:
         :return: list of Book objects
         """
         lis = []
+        biggestrating = 0
         for i in self.books:
-            lis.append([i, i.rating])
-        
-        so = []
-        for i in sorted(lis, key= lambda elem : elem[1], reverse=True):
-            so.append(i[0])
-        return so
+            if i.rating > biggestrating:
+                biggestrating = i.rating
+                
+        for i in self.books:
+            if i.rating == biggestrating:
+                lis.append(i)
+            
+        return lis
+
