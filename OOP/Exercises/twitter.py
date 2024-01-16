@@ -60,10 +60,10 @@ def sort_by_popularity(tweets: list) -> list:
     """
     lis = []
     for i in tweets:
-        lis.append([i, i.retweets])
+        lis.append([i, i.retweets, i.time])
         
     so = []
-    for i in sorted(lis, key= lambda elem : elem[1]*-1):
+    for i in sorted(lis, key= lambda elem : (elem[1]*-1, elem[2])):
         so.append(i[0])
     return so
 
@@ -136,3 +136,4 @@ if __name__ == '__main__':
 
     sorted_hashtags = sort_hashtags_by_popularity(tweets)
     print(sorted_hashtags[0])  # -> "#heart"
+
