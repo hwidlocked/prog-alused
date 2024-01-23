@@ -115,11 +115,13 @@ class OrderAggregator:
         """
         items = []
         cur_volume = 0
+        cur_quantity = 0
         for i in self.order_items.copy():
             if i.customer == customer:
-                if cur_volume + i.total_volume <= max_volume:
+                if cur_volume + i.total_volume <= max_volume and cur_quantity + i.quantity <= max_items_quantity:
                     items.append(i)
                     cur_volume += i.total_volume
+                    cur_quantity += i.quantity
                     self.order_items.remove(i)
                 
         return Order(items)
@@ -150,6 +152,10 @@ class ContainerAggregator:
         for i in orders:
             if i.destination not in end and i.total_volume <= self.container_volume:
                 end[i.destination] = []
+            elif i not in self.not_used_orders and i.destination not in end:
+                self.not_used_orders.append(i)
+            
+            if i.destination in end:
                 allorders = []
                 for a in orders:
                     if a.destination == i.destination:
@@ -158,8 +164,7 @@ class ContainerAggregator:
                         self.not_used_orders.append(a)
                 con = Container(self.container_volume, allorders)
                 end[i.destination].append(con)
-            elif i not in self.not_used_orders:
-                self.not_used_orders.append(i)
+            
         return end
 
 
@@ -210,3 +215,4 @@ if __name__ == '__main__':
         print('Container to Tallinn not found!')
 
     print(f'{len(ca.not_used_orders)}(1 is correct) cannot be added to containers')
+
