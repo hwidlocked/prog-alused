@@ -17,9 +17,10 @@ class Tweet:
         self.content = content
         self.time = time
         self.retweets = retweets
-        self.hashtag = None
-        if "#" in content.split()[-1]:
-            self.hashtag = content.split()[-1]
+        self.hashtag = []
+        for i in content.split():
+            if i[0] == "#":
+                self.hashtag.append(i)
 
 
 def find_fastest_growing(tweets: list) -> Tweet:
@@ -101,11 +102,12 @@ def sort_hashtags_by_popularity(tweets: list) -> list:
     """
     hashtagpop = {}
     for i in tweets:
-        if i.hashtag != None:
-            if i.hashtag not in hashtagpop:
-                hashtagpop[i.hashtag] = i.retweets
-            else:
-                hashtagpop[i.hashtag] += i.retweets
+        if len(i.hashtag) >= 0:
+            for hashtag in i.hashtag:
+                if hashtag not in hashtagpop:
+                    hashtagpop[hashtag] = i.retweets
+                else:
+                    hashtagpop[hashtag] += i.retweets
             
     lis = []
     for i in hashtagpop:

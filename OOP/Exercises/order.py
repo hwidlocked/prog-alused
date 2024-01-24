@@ -155,15 +155,26 @@ class ContainerAggregator:
             elif i not in self.not_used_orders and i.destination not in end:
                 self.not_used_orders.append(i)
             
-            if i.destination in end:
-                allorders = []
+            if i.destination in end and len(end[i.destination]) == 0:
+                allorders = [[],[],[]]
+                cur = 0
                 for a in orders:
-                    if a.destination == i.destination:
-                        allorders.append(a)
+                    if a.destination == i.destination and cur + a.total_volume <= self.container_volume:
+                        allorders[0].append(a)
+                        cur += a.total_volume
+                    elif a.destination == i.destination and cur + a.total_volume <= self.container_volume*2: # mida ma teen appi
+                        allorders[1].append(a)
+                        cur += a.total_volume
+                    elif a.destination == i.destination and cur + a.total_volume <= self.container_volume*3:
+                        allorders[2].append(a)
+                        cur += a.total_volume
                     elif a not in self.not_used_orders:
                         self.not_used_orders.append(a)
-                con = Container(self.container_volume, allorders)
-                end[i.destination].append(con)
+                
+                for xorders in allorders:
+                    if len(xorders) >= 1:
+                        con = Container(self.container_volume, xorders)
+                        end[i.destination].append(con)
             
         return end
 
@@ -215,4 +226,34 @@ if __name__ == '__main__':
         print('Container to Tallinn not found!')
 
     print(f'{len(ca.not_used_orders)}(1 is correct) cannot be added to containers')
+    
+def test__container_aggregator__creates_new_container_if_order_does__not_fit_to_already_existing_container(
+):
+    """Test."""
+    ca = ContainerAggregator(50)
+    order1 = Order([
+        OrderItem("customer", "item1", 4, 5),
+        OrderItem("customer", "item2", 1, 28)
+    ])
+    order2 = Order([OrderItem("customer", "item3", 1, 1)])
+    order3 = Order([OrderItem("customer", "item4", 10, 2)])
+    order1.destination = "Tallinn"
+    order2.destination = "Tallinn"
+    order3.destination = "Tallinn"
 
+    containers = ca.prepare_containers((order1, order2, order3))
+
+    assert len(containers) == 1
+
+    tallinn_containers = containers['Tallinn']
+    assert len(tallinn_containers) == 2
+
+    assert tallinn_containers[0].volume == 50
+    assert tallinn_containers[0].orders == [order1, order2]
+
+    assert tallinn_containers[1].volume == 50
+    assert tallinn_containers[1].orders == [order3]
+
+
+test__container_aggregator__creates_new_container_if_order_does__not_fit_to_already_existing_container(
+)
