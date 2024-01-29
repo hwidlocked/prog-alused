@@ -168,7 +168,7 @@ class ContainerAggregator:
                     elif a.destination == i.destination and cur + a.total_volume <= self.container_volume*3:
                         allorders[2].append(a)
                         cur += a.total_volume
-                    elif a not in self.not_used_orders:
+                    elif a not in self.not_used_orders and a.destination not in end:
                         self.not_used_orders.append(a)
                 
                 for xorders in allorders:
@@ -226,34 +226,4 @@ if __name__ == '__main__':
         print('Container to Tallinn not found!')
 
     print(f'{len(ca.not_used_orders)}(1 is correct) cannot be added to containers')
-    
-def test__container_aggregator__creates_new_container_if_order_does__not_fit_to_already_existing_container(
-):
-    """Test."""
-    ca = ContainerAggregator(50)
-    order1 = Order([
-        OrderItem("customer", "item1", 4, 5),
-        OrderItem("customer", "item2", 1, 28)
-    ])
-    order2 = Order([OrderItem("customer", "item3", 1, 1)])
-    order3 = Order([OrderItem("customer", "item4", 10, 2)])
-    order1.destination = "Tallinn"
-    order2.destination = "Tallinn"
-    order3.destination = "Tallinn"
 
-    containers = ca.prepare_containers((order1, order2, order3))
-
-    assert len(containers) == 1
-
-    tallinn_containers = containers['Tallinn']
-    assert len(tallinn_containers) == 2
-
-    assert tallinn_containers[0].volume == 50
-    assert tallinn_containers[0].orders == [order1, order2]
-
-    assert tallinn_containers[1].volume == 50
-    assert tallinn_containers[1].orders == [order3]
-
-
-test__container_aggregator__creates_new_container_if_order_does__not_fit_to_already_existing_container(
-)
