@@ -159,9 +159,9 @@ class Statistics:
             elif args[2] == "most-frequent-winner":
                 unsorted = []
                 for player in game.players:
-                    unsorted.append([player.name, (player.games_won/len(player.played))])
+                    unsorted.append([player.name, (player.games_won/len(player.played), player.played)])
                 sortedlist = []
-                for i in sorted(unsorted, key= lambda elem : elem[1]*-1):
+                for i in sorted(unsorted, key= lambda elem : (elem[1]*-1)):
                     sortedlist.append(i[0])
                 return sortedlist[0]
             elif args[2] == "most-losses":

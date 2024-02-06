@@ -159,17 +159,22 @@ class ContainerAggregator:
                 allorders = [[],[],[]]
                 cur = 0
                 for a in orders:
+                    print(cur, self.container_volume, a.destination)
                     if a.destination == i.destination and cur + a.total_volume <= self.container_volume:
                         allorders[0].append(a)
                         cur += a.total_volume
-                    elif a.destination == i.destination and cur + a.total_volume <= self.container_volume*2: # mida ma teen appi
+                        print("1", cur)
+                    elif a.destination == i.destination and cur + a.total_volume <= self.container_volume*2 and len(allorders[0]) >= 1: # mida ma teen appi
                         allorders[1].append(a)
                         cur += a.total_volume
-                    elif a.destination == i.destination and cur + a.total_volume <= self.container_volume*3:
+                        print("2", cur)
+                    elif a.destination == i.destination and cur + a.total_volume <= self.container_volume*3 and len(allorders[1]) >= 1:
                         allorders[2].append(a)
                         cur += a.total_volume
+                        print("3", cur)
                     elif a not in self.not_used_orders and a.destination not in end:
                         self.not_used_orders.append(a)
+                        print("Not Used")
                 
                 for xorders in allorders:
                     if len(xorders) >= 1:
@@ -226,4 +231,3 @@ if __name__ == '__main__':
         print('Container to Tallinn not found!')
 
     print(f'{len(ca.not_used_orders)}(1 is correct) cannot be added to containers')
-
