@@ -184,3 +184,6 @@ class Statistics:
                 return game.record_holder
         else:
             return None
+        
+lol = Statistics("players.txt")
+print(lol.get("/game/terraforming mars/record-holder"))
